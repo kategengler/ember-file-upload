@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-const { get } = Ember;
+const { get, merge } = Ember;
 const { service } = Ember.inject;
 
 /**
@@ -46,13 +46,14 @@ export default Ember.Helper.extend({
   fileQueue: service(),
 
   compute(_, hash) {
+    let options = merge({}, hash);
     let queues = get(this, 'fileQueue');
-    let queueName = hash['for'];
+    let queueName = options['for'];
     if (queueName) {
-      delete hash['for'];
+      delete options['for'];
       let queue = queues.find(queueName) ||
                   queues.create(queueName);
-      queue.setProperties(hash);
+      queue.setProperties(options);
       return queue;
     }
 
